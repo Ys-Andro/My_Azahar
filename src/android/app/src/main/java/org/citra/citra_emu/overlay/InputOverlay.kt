@@ -200,9 +200,17 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
                         ComboHelper.comboActivate(button.status)
                     }
 
+                    val mappedButtonId = when (button.id) {
+                        NativeLibrary.ButtonType.BUTTON_A ->
+                            NativeLibrary.ButtonType.BUTTON_B
+                        NativeLibrary.ButtonType.BUTTON_B ->
+                            NativeLibrary.ButtonType.BUTTON_A
+                        else -> button.id
+                    }
+
                     NativeLibrary.onGamePadEvent(
                         NativeLibrary.TOUCHSCREEN_DEVICE,
-                        button.id,
+                        mappedButtonId,
                         button.status
                     )
 
@@ -427,8 +435,8 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             overlayButtons.add(
                 initializeOverlayButton(
                     context,
-                    R.drawable.button_a,
-                    R.drawable.button_a_pressed,
+                    R.drawable.button_b,
+                    R.drawable.button_b_pressed,
                     NativeLibrary.ButtonType.BUTTON_A,
                     orientation
                 )
@@ -438,8 +446,8 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             overlayButtons.add(
                 initializeOverlayButton(
                     context,
-                    R.drawable.button_b,
-                    R.drawable.button_b_pressed,
+                    R.drawable.button_a,
+                    R.drawable.button_a_pressed,
                     NativeLibrary.ButtonType.BUTTON_B,
                     orientation
                 )
