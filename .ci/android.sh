@@ -7,6 +7,9 @@ if [ ! -z "${ANDROID_KEYSTORE_B64}" ]; then
     base64 --decode <<< "${ANDROID_KEYSTORE_B64}" > "${ANDROID_KEYSTORE_FILE}"
 fi
 
+# Apply the dedicated Ocarina of Time 3D Android performance profile before Gradle/CMake configure.
+python3 .ci/oot3d_optimize.py
+
 cd src/android
 chmod +x ./gradlew
 
