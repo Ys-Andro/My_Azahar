@@ -7,29 +7,31 @@ SETTINGS = ROOT / "src/common/settings.h"
 CONFIG = ROOT / "src/android/app/src/main/jni/config.cpp"
 
 
-def replace_once(path: Path, old: str, new: str) -> None:
+def ensure_once(path: Path, old: str, new: str) -> None:
     text = path.read_text(encoding="utf-8")
+    if new in text:
+        return
     if old not in text:
         raise SystemExit(f"Required pattern not found in {path}: {old[:100]!r}")
     path.write_text(text.replace(old, new, 1), encoding="utf-8")
 
 
-replace_once(
+ensure_once(
     SETTINGS,
     "#if defined(ANDROID) && defined(ENABLE_VULKAN) // Prefer Vulkan on Android, OpenGL on everything else\n        GraphicsAPI::Vulkan,",
     "#if defined(ANDROID) && defined(ENABLE_VULKAN) // My_Azahar OoT3D: prefer stable OpenGL ES on Adreno 6xx\n        GraphicsAPI::OpenGL,",
 )
-replace_once(
+ensure_once(
     SETTINGS,
     "SwitchableSetting<bool> async_shader_compilation{false, Keys::async_shader_compilation};",
     "SwitchableSetting<bool> async_shader_compilation{true, Keys::async_shader_compilation};",
 )
-replace_once(
+ensure_once(
     SETTINGS,
     "SwitchableSetting<bool> shaders_accurate_mul{true, Keys::shaders_accurate_mul};",
     "SwitchableSetting<bool> shaders_accurate_mul{false, Keys::shaders_accurate_mul};",
 )
-replace_once(
+ensure_once(
     SETTINGS,
     "SwitchableSetting<LayoutOption> layout_option{LayoutOption::Default, Keys::layout_option};",
     "SwitchableSetting<LayoutOption> layout_option{LayoutOption::SingleScreen, Keys::layout_option};",
